@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#6d38ff" />
+  <meta name="description" content="Dashboard responsivo Skyline Mobile para gestao, comercial, operacao e central de IA." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Skyline" />
+
+  <title>Skyline Mobile | Comercial</title>
+
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <noscript>Ative o JavaScript para usar o painel Skyline.</noscript>
+
+  <section class="splash" id="splash" aria-label="Carregando Skyline Mobile" role="status">
+    <picture>
+      <source media="(max-width: 767px)" srcset="assets/splash-mobile.png" />
+      <img class="splash__image" src="assets/splash-desktop.png" alt="Skyline Mobile" />
+    </picture>
+    <div class="splash__loader" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+  </section>
+
+  <div class="app-shell is-loading" id="app" aria-hidden="true">
+    <div class="screen-glow" id="screenGlow" aria-hidden="true"></div>
+    <aside class="sidebar" aria-label="Menu principal">
+      <button class="brand" data-section="home" type="button" aria-label="Ir para Home">
+        <img src="assets/logo-skyline-desktop.png" alt="Skyline Mobile" class="brand__logo brand__logo--full" />
+        <img src="assets/logo-skyline-mark.png" alt="Skyline Mobile" class="brand__logo brand__logo--mark" />
+      </button>
+
+      <nav class="side-nav" id="sidebarNav">
+        <button class="nav-item is-active" data-section="comercial" type="button" aria-label="Ir para comercial">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" /></span>
+          <span class="nav-label">comercial</span>
+        </button>
+        <button class="nav-item" data-section="operacao" type="button" aria-label="Ir para operacao">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" /></span>
+          <span class="nav-label">operacao</span>
+        </button>
+        <button class="nav-item" data-section="home" type="button" aria-label="Ir para home">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/home.svg" alt="" /></span>
+          <span class="nav-label">home</span>
+        </button>
+        <button class="nav-item" data-section="financeiro" type="button" aria-label="Ir para financeiro">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/money.svg" alt="" /></span>
+          <span class="nav-label">financeiro</span>
+        </button>
+        <button class="nav-item" data-section="gestao" type="button" aria-label="Ir para gestao">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" /></span>
+          <span class="nav-label">gestao</span>
+        </button>
+      </nav>
+
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Recolher menu lateral" aria-expanded="true" aria-controls="sidebarNav">
+        <img class="sidebar-toggle__icon ui-icon" src="assets/icons/back.svg" alt="" aria-hidden="true" />
+      </button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="pageKicker"><img class="ui-icon eyebrow__icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /> comercial</p>
+          <h1 id="pageTitle">BUs em formato de acoes para leitura rapida</h1>
+        </div>
+
+        <div class="topbar__actions">
+          <label class="search" aria-label="Buscar">
+            <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
+            <input type="search" placeholder="buscar..." />
+          </label>
+          <button class="icon-button refresh-button" id="refreshData" type="button" aria-label="Atualizar informacoes" title="Atualizar informacoes">
+            <img class="refresh-icon ui-icon" src="assets/icons/refresh.svg" alt="" aria-hidden="true" />
+          </button>
+        </div>
+      </header>
+
+      <section class="page-stage" aria-live="polite">
+        <section class="page-view is-active" data-view="comercial" aria-labelledby="comercial-title">
+          <h2 class="sr-only" id="comercial-title">Comercial</h2>
+          <section class="market-layout">
+            <div class="market-board" aria-label="Lista de BUs comerciais">
+              <article class="market-row market-row--up">
+                <div class="market-symbol">
+                  <strong>LOJA</strong>
+                  <span>loja fisica</span>
+                </div>
+                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,34 18,28 34,21 50,24 66,18 82,16 98,11 114,13 132,7 148,4" /></svg>
+                <div class="market-value">
+                  <strong>R$ 842K</strong>
+                  <span>+15,6%</span>
+                </div>
+              </article>
+
+              <article class="market-row market-row--up">
+                <div class="market-symbol">
+                  <strong>WPP</strong>
+                  <span>whatsapp</span>
+                </div>
+                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,33 18,30 34,31 50,23 66,26 82,18 98,20 114,14 132,9 148,7" /></svg>
+                <div class="market-value">
+                  <strong>R$ 416K</strong>
+                  <span>+9,4%</span>
+                </div>
+              </article>
+
+              <article class="market-row market-row--up">
+                <div class="market-symbol">
+                  <strong>SITE</strong>
+                  <span>ecommerce proprio</span>
+                </div>
+                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,28 18,30 34,24 50,25 66,19 82,21 98,15 114,17 132,10 148,6" /></svg>
+                <div class="market-value">
+                  <strong>R$ 298K</strong>
+                  <span>+7,1%</span>
+                </div>
+              </article>
+
+              <article class="market-row market-row--down">
+                <div class="market-symbol">
+                  <strong>MKT</strong>
+                  <span>marketplaces</span>
+                </div>
+                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,9 18,11 34,16 50,14 66,21 82,20 98,27 114,24 132,30 148,34" /></svg>
+                <div class="market-value">
+                  <strong>R$ 536K</strong>
+                  <span>-2,8%</span>
+                </div>
+              </article>
+            </div>
+
+            <aside class="commercial-side panel-card" aria-label="Leitura rapida comercial">
+              <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
+              <article class="mini-insight">
+                <strong>loja lidera o dia</strong>
+                <span>maior crescimento e maior ticket medio.</span>
+              </article>
+              <article class="mini-insight">
+                <strong>marketplaces em atencao</strong>
+                <span>queda pede revisao de preco e margem.</span>
+              </article>
+              <button class="full-button" type="button">abrir diagnostico ›</button>
+            </aside>
+          </section>
+        </section>
+
+        <section class="page-view" data-view="operacao" aria-labelledby="operacao-title" hidden>
+          <h2 class="sr-only" id="operacao-title">Operacao</h2>
+          <section class="operation-layout">
+            <div class="operation-timeline panel-card" aria-label="Etapas da producao">
+              <article class="timeline-stop">
+                <span class="timeline-marker">1</span>
+                <div class="timeline-stop__content">
+                  <header><div><h3>recebimento</h3><p>entrada, conferencia e registro</p></div><strong>R$ 18,4K</strong></header>
+                  <div class="timeline-meta"><span>14 OS paradas</span><span>tempo medio 1h12</span></div>
+                </div>
+              </article>
+
+              <article class="timeline-stop">
+                <span class="timeline-marker">2</span>
+                <div class="timeline-stop__content">
+                  <header><div><h3>triagem</h3><p>diagnostico inicial e priorizacao</p></div><strong>R$ 42,1K</strong></header>
+                  <div class="timeline-meta"><span>31 OS paradas</span><span>tempo medio 2h40</span></div>
+                </div>
+              </article>
+
+              <article class="timeline-stop">
+                <span class="timeline-marker">3</span>
+                <div class="timeline-stop__content">
+                  <header><div><h3>gestao de pecas</h3><p>separacao, compra e reserva</p></div><strong>R$ 63,9K</strong></header>
+                  <div class="timeline-meta"><span>42 OS paradas</span><span>tempo medio 5h05</span></div>
+                </div>
+              </article>
+
+              <article class="timeline-stop timeline-stop--alert">
+                <span class="timeline-marker">4</span>
+                <div class="timeline-stop__content">
+                  <header><div><h3>reparo</h3><p>execucao tecnica e retrabalho</p></div><strong>R$ 89,7K</strong></header>
+                  <div class="timeline-meta"><span>68 OS paradas</span><span>maior gargalo</span></div>
+                </div>
+              </article>
+
+              <article class="timeline-stop">
+                <span class="timeline-marker">5</span>
+                <div class="timeline-stop__content">
+                  <header><div><h3>qualidade</h3><p>teste final e liberacao</p></div><strong>R$ 22,3K</strong></header>
+                  <div class="timeline-meta"><span>29 OS paradas</span><span>tempo medio 1h55</span></div>
+                </div>
+              </article>
+            </div>
+
+            <aside class="operation-side panel-card" aria-label="Leitura rapida da operacao">
+              <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
+              <article class="mini-insight">
+                <strong>reparo em atencao</strong>
+                <span>etapa critica com R$ 89,7K parados.</span>
+              </article>
+              <article class="mini-insight">
+                <strong>pecas + reparo concentram custo</strong>
+                <span>64,9% do custo parado na operacao.</span>
+              </article>
+              <button class="full-button" type="button">abrir plano de acao ›</button>
+            </aside>
+          </section>
+        </section>
+
+        <section class="page-view" data-view="home" aria-labelledby="home-title" hidden>
+          <section class="coming-soon panel-card">
+            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span>
+            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span> home</p>
+            <h2 id="home-title">em breve...</h2>
+            <p>A central inteligente sera ligada aos endpoints de insights, previsoes e alertas.</p>
+          </section>
+        </section>
+
+        <section class="page-view" data-view="financeiro" aria-labelledby="financeiro-title" hidden>
+          <section class="coming-soon panel-card">
+            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span>
+            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span> financas</p>
+            <h2 id="financeiro-title">em breve...</h2>
+            <p>Fluxo de caixa, margem, conciliacao e indicadores financeiros entram nesta tela.</p>
+          </section>
+        </section>
+
+        <section class="page-view" data-view="gestao" aria-labelledby="gestao-title" hidden>
+          <section class="coming-soon panel-card">
+            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span>
+            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span> gestao</p>
+            <h2 id="gestao-title">em breve...</h2>
+            <p>Metas, OKRs, indicadores por area e planos de acao ficarao centralizados aqui.</p>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <div class="mobile-insight" id="mobileInsight" hidden>
+      <button class="mobile-insight__fab" id="mobileInsightFab" type="button" aria-label="Abrir leitura rapida" aria-expanded="false" aria-controls="mobileInsightSheet">
+        <span aria-hidden="true" id="mobileInsightFabIcon"><img class="ui-icon mobile-insight__fab-icon" src="assets/icons/sparks.svg" alt="" /></span>
+      </button>
+
+      <div class="mobile-insight__backdrop" data-mobile-insight-close aria-hidden="true"></div>
+
+      <aside class="mobile-insight__sheet panel-card" id="mobileInsightSheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mobileInsightTitle" aria-hidden="true">
+        <button class="mobile-insight__close" type="button" data-mobile-insight-close aria-label="Fechar leitura rapida">×</button>
+        <p class="section-kicker" id="mobileInsightKicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
+        <div id="mobileInsightContent">
+          <article class="mini-insight">
+            <strong id="mobileInsightTitle">loja lidera o dia</strong>
+            <span>maior crescimento e maior ticket medio.</span>
+          </article>
+          <article class="mini-insight">
+            <strong>marketplaces em atencao</strong>
+            <span>queda pede revisao de preco e margem.</span>
+          </article>
+        </div>
+        <button class="full-button" id="mobileInsightAction" type="button">abrir diagnostico ›</button>
+      </aside>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Menu inferior">
+      <button class="is-active" data-section="comercial" type="button"><span><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></span>comercial</button>
+      <button data-section="operacao" type="button"><span><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></span>operacao</button>
+      <button data-section="home" type="button"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span>home</button>
+      <button data-section="financeiro" type="button"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span>financeiro</button>
+      <button data-section="gestao" type="button"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span>gestao</button>
+    </nav>
+  </div>
+
+  <button class="install-app" id="installApp" type="button" hidden>Instalar app</button>
+  <script src="app.js" defer></script>
+</body>
+</html>
