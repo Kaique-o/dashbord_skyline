@@ -1,4 +1,4 @@
-const CACHE_NAME = 'skyline-mobile-v16-sidebar-animada';
+const CACHE_NAME = 'skyline-mobile-v35-header-search-clean';
 const APP_SHELL = [
   './',
   './index.html',

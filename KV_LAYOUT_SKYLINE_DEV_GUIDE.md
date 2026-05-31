@@ -54,29 +54,52 @@ O visual deve ter movimento e brilho, porém todo efeito precisa ser sutil, func
 
 ## 3. Paleta de cores
 
-### Cores principais
+### Regra oficial
 
-| Uso | Cor sugerida | Observação |
-|---|---:|---|
-| Roxo principal | `#6D35F2` | Cor de ação, ícones ativos e destaques |
-| Roxo neon | `#8A4DFF` | Glow, bordas ativas e microinterações |
-| Roxo profundo | `#19063D` | Fundos escuros e splash |
-| Lilás claro | `#EEE8FF` | Badges e áreas suaves |
-| Branco base | `#FFFFFF` | Fundo dos cards |
-| Fundo app claro | `#F8F7FC` | Background principal |
-| Texto principal | `#171326` | Títulos e números importantes |
-| Texto secundário | `#6F6A7F` | Descrições, labels e legendas |
-| Borda suave | `#E8E4F2` | Divisões e contornos |
-| Sucesso | `#14A65A` | Indicadores positivos |
-| Alerta/queda | `#F15B3D` | Indicadores negativos |
+A paleta soft abaixo e a referencia obrigatoria para novas telas, cards, badges, graficos, alertas e estados visuais.
+
+A unica excecao de cor viva fora da tabela e o **roxo da marca Skyline**, usado para navegacao ativa, botoes principais, glow, logo e microinteracoes:
+
+| Uso | Cor oficial |
+|---|---:|
+| Roxo principal da marca | `#7436F5` |
+| Roxo secundario da marca | `#9D6BFF` |
+
+Tons neutros funcionais como branco, preto, texto escuro, sombras e transparencias `rgba()` podem ser usados apenas para estrutura, contraste e glassmorphism. Eles nao devem virar cor de categoria.
+
+### Paleta soft oficial
+
+| Cor | Quase branca | Normal |
+|---|---:|---:|
+| Azul | `#F3F7FF` | `#4F7CFF` |
+| Verde | `#F3FBF6` | `#5BBF7A` |
+| Vermelho | `#FFF5F5` | `#E66A6A` |
+| Amarelo | `#FFFBEF` | `#E7C54A` |
+| Laranja | `#FFF6EF` | `#F39A4A` |
+| Roxo | `#F7F4FF` | `#8C6CFF` |
+| Ciano | `#F1FCFF` | `#58C7D9` |
+| Cinza | `#F7F8FA` | `#8D97A6` |
+
+### Mapeamento de uso no app
+
+| Uso | Cor |
+|---|---:|
+| Fundo geral claro | `#F7F8FA` |
+| Areas roxas suaves | `#F7F4FF` |
+| Sucesso / positivo | `#5BBF7A` |
+| Erro / queda / negativo | `#E66A6A` |
+| Alerta operacional | `#F39A4A` |
+| Destaque informativo | `#4F7CFF` |
+| Apoio visual frio | `#58C7D9` |
+| Texto auxiliar / cinza visual | `#8D97A6` |
 
 ### Regras de uso
 
-- Roxo nunca deve dominar toda a interface clara.
-- O branco deve ser predominante nas telas internas.
-- O roxo deve guiar atenção, não competir com o conteúdo.
-- O glow só pode aparecer em elementos importantes: splash, logo, item ativo, botão principal, cards de IA e gráficos.
-- Não usar muitas cores além de roxo, verde e laranja/vermelho para status.
+- Nao criar novas cores sem atualizar este guia.
+- Nao usar vermelho, verde, amarelo, laranja, azul, ciano ou cinza fora dos hexadecimais oficiais acima.
+- Roxo de marca pode usar `#7436F5`, `#9D6BFF` e variacoes em `rgba()` para glow e glass.
+- Se aparecer uma cor diferente no CSS, ela deve ser substituida pela cor mais proxima da paleta oficial.
+- Branco, preto, texto escuro e sombras sao permitidos apenas como base estrutural.
 
 ---
 
@@ -862,8 +885,8 @@ O sistema deve se comportar como aplicativo quando instalado.
   "short_name": "Skyline",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#19063D",
-  "theme_color": "#19063D",
+  "background_color": "#7436F5",
+  "theme_color": "#7436F5",
   "icons": []
 }
 ```

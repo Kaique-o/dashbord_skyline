@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#6d38ff" />
+  <meta name="theme-color" content="#7436f5" />
   <meta name="description" content="Dashboard responsivo Skyline Mobile para gestao, comercial, operacao e central de IA." />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Skyline" />
 
-  <title>Skyline Mobile | Comercial</title>
+  <title>Skyline Mobile | Home</title>
 
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
@@ -30,7 +30,7 @@
     </div>
   </section>
 
-  <div class="app-shell is-loading" id="app" aria-hidden="true">
+  <div class="app-shell is-loading is-sidebar-collapsed" id="app" aria-hidden="true">
     <div class="screen-glow" id="screenGlow" aria-hidden="true"></div>
     <aside class="sidebar" aria-label="Menu principal">
       <button class="brand" data-section="home" type="button" aria-label="Ir para Home">
@@ -39,45 +39,52 @@
       </button>
 
       <nav class="side-nav" id="sidebarNav">
-        <button class="nav-item is-active" data-section="comercial" type="button" aria-label="Ir para comercial">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" /></span>
-          <span class="nav-label">comercial</span>
-        </button>
-        <button class="nav-item" data-section="operacao" type="button" aria-label="Ir para operacao">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" /></span>
-          <span class="nav-label">operacao</span>
-        </button>
-        <button class="nav-item" data-section="home" type="button" aria-label="Ir para home">
+        <button class="nav-item is-active" data-section="home" type="button" aria-label="Ir para home" title="home">
           <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/home.svg" alt="" /></span>
           <span class="nav-label">home</span>
         </button>
-        <button class="nav-item" data-section="financeiro" type="button" aria-label="Ir para financeiro">
+        <button class="nav-item" data-section="comercial" type="button" aria-label="Ir para comercial" title="comercial">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" /></span>
+          <span class="nav-label">comercial</span>
+        </button>
+        <button class="nav-item" data-section="operacao" type="button" aria-label="Ir para operacao" title="operacao">
+          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" /></span>
+          <span class="nav-label">operacao</span>
+        </button>
+        <button class="nav-item" data-section="financeiro" type="button" aria-label="Ir para financeiro" title="financeiro">
           <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/money.svg" alt="" /></span>
           <span class="nav-label">financeiro</span>
         </button>
-        <button class="nav-item" data-section="gestao" type="button" aria-label="Ir para gestao">
+        <button class="nav-item" data-section="gestao" type="button" aria-label="Ir para gestao" title="gestao">
           <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" /></span>
           <span class="nav-label">gestao</span>
         </button>
       </nav>
 
-      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Recolher menu lateral" aria-expanded="true" aria-controls="sidebarNav">
-        <img class="sidebar-toggle__icon ui-icon" src="assets/icons/back.svg" alt="" aria-hidden="true" />
-      </button>
     </aside>
 
     <main class="main-content">
       <header class="topbar">
-        <div>
-          <p class="eyebrow" id="pageKicker"><img class="ui-icon eyebrow__icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /> comercial</p>
-          <h1 id="pageTitle">BUs em formato de acoes para leitura rapida</h1>
+        <div class="topbar__headline">
+          <p class="eyebrow" id="pageKicker">home</p>
+          <h1 id="pageTitle" class="sr-only">Central inteligente com plano de acao por area</h1>
+          <img src="assets/logo-skyline-desktop.png" alt="Skyline Mobile" class="topbar__mobile-logo" />
         </div>
 
         <div class="topbar__actions">
-          <label class="search" aria-label="Buscar">
-            <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
-            <input type="search" placeholder="buscar..." />
-          </label>
+          <div class="global-search" id="globalSearch">
+            <label class="search search--desktop" for="desktopSearchInput" aria-label="Buscar no app">
+              <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
+              <input id="desktopSearchInput" type="search" placeholder="buscar no app..." autocomplete="off" enterkeyhint="search" aria-controls="desktopSearchResults" aria-expanded="false" />
+            </label>
+
+            <button class="search search--mobile-trigger" id="mobileSearchTrigger" type="button" aria-label="Abrir busca global" aria-expanded="false" aria-controls="mobileSearchSheet">
+              <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
+            </button>
+
+            <div class="search-results" id="desktopSearchResults" role="listbox" aria-label="Resultados da busca" hidden></div>
+          </div>
+
           <button class="icon-button refresh-button" id="refreshData" type="button" aria-label="Atualizar informacoes" title="Atualizar informacoes">
             <img class="refresh-icon ui-icon" src="assets/icons/refresh.svg" alt="" aria-hidden="true" />
           </button>
@@ -85,7 +92,7 @@
       </header>
 
       <section class="page-stage" aria-live="polite">
-        <section class="page-view is-active" data-view="comercial" aria-labelledby="comercial-title">
+        <section class="page-view" data-view="comercial" aria-labelledby="comercial-title" hidden>
           <h2 class="sr-only" id="comercial-title">Comercial</h2>
           <section class="market-layout">
             <div class="market-board" aria-label="Lista de BUs comerciais">
@@ -213,12 +220,56 @@
           </section>
         </section>
 
-        <section class="page-view" data-view="home" aria-labelledby="home-title" hidden>
-          <section class="coming-soon panel-card">
-            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span>
-            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span> home</p>
-            <h2 id="home-title">em breve...</h2>
-            <p>A central inteligente sera ligada aos endpoints de insights, previsoes e alertas.</p>
+        <section class="page-view is-active" data-view="home" aria-label="Home Skyline">
+          <section class="home-ai-box panel-card" aria-label="Planos de acao por categoria">
+            <span class="home-ai-box__spark home-ai-box__spark--top"><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span>
+            <span class="home-ai-box__spark home-ai-box__spark--bottom"><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span>
+
+            <div class="home-ai-box__intro" aria-label="Resumo geral da empresa">
+              <article class="home-ai-box__status home-ai-box__status--full">
+                <span>leitura geral</span>
+                <strong>estavel com pontos de atencao</strong>
+                <small>atualizado pela central skyline</small>
+              </article>
+            </div>
+
+            <div class="action-plan-grid" aria-label="Planos de acao por categoria">
+              <article class="action-plan-card">
+                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></div>
+                <div>
+                  <span class="action-plan-card__tag">comercial</span>
+                  <h3>priorizar canais com margem real</h3>
+                  <p>Revisar precos, separar venda por canal e destacar produtos com maior giro e menor impacto no caixa.</p>
+                </div>
+              </article>
+
+              <article class="action-plan-card">
+                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></div>
+                <div>
+                  <span class="action-plan-card__tag">operacao</span>
+                  <h3>remover gargalos da linha</h3>
+                  <p>Monitorar etapas paradas, tempo medio por status e custo preso em reparo, triagem e qualidade.</p>
+                </div>
+              </article>
+
+              <article class="action-plan-card">
+                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></div>
+                <div>
+                  <span class="action-plan-card__tag">financeiro</span>
+                  <h3>blindar caixa e margem</h3>
+                  <p>Acompanhar contas criticas, previsao de entrada, custo parado e diferenca entre faturamento e lucro.</p>
+                </div>
+              </article>
+
+              <article class="action-plan-card">
+                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></div>
+                <div>
+                  <span class="action-plan-card__tag">gerencial</span>
+                  <h3>fechar rotina de decisao</h3>
+                  <p>Centralizar metas, alertas, indicadores por area e proximas acoes para acompanhamento diario.</p>
+                </div>
+              </article>
+            </div>
           </section>
         </section>
 
@@ -241,6 +292,21 @@
         </section>
       </section>
     </main>
+
+    <div class="mobile-search" id="mobileSearch" hidden>
+      <div class="mobile-search__backdrop" data-mobile-search-close aria-hidden="true"></div>
+
+      <aside class="mobile-search__sheet panel-card" id="mobileSearchSheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mobileSearchTitle" aria-hidden="true">
+        <h2 class="sr-only" id="mobileSearchTitle">Busca global</h2>
+
+        <label class="mobile-search__field" for="mobileSearchInput" aria-label="Buscar no app">
+          <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
+          <input id="mobileSearchInput" type="search" placeholder="buscar no app..." autocomplete="off" enterkeyhint="search" aria-controls="mobileSearchResults" />
+        </label>
+
+        <div class="mobile-search__results" id="mobileSearchResults" role="listbox" aria-label="Resultados da busca mobile"></div>
+      </aside>
+    </div>
 
     <div class="mobile-insight" id="mobileInsight" hidden>
       <button class="mobile-insight__fab" id="mobileInsightFab" type="button" aria-label="Abrir leitura rapida" aria-expanded="false" aria-controls="mobileInsightSheet">
@@ -267,11 +333,11 @@
     </div>
 
     <nav class="bottom-nav" aria-label="Menu inferior">
-      <button class="is-active" data-section="comercial" type="button"><span><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></span>comercial</button>
-      <button data-section="operacao" type="button"><span><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></span>operacao</button>
-      <button data-section="home" type="button"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span>home</button>
-      <button data-section="financeiro" type="button"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span>financeiro</button>
-      <button data-section="gestao" type="button"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span>gestao</button>
+      <button data-section="comercial" type="button" aria-label="Ir para comercial" title="comercial"><span><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></span></button>
+      <button data-section="operacao" type="button" aria-label="Ir para operacao" title="operacao"><span><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></span></button>
+      <button class="is-active" data-section="home" type="button" aria-label="Ir para home" title="home"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span></button>
+      <button data-section="financeiro" type="button" aria-label="Ir para financeiro" title="financeiro"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span></button>
+      <button data-section="gestao" type="button" aria-label="Ir para gestao" title="gestao"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span></button>
     </nav>
   </div>
 

@@ -6,8 +6,16 @@ const pageKicker = document.querySelector('#pageKicker');
 const pageTitle = document.querySelector('#pageTitle');
 const installButton = document.querySelector('#installApp');
 const refreshButton = document.querySelector('#refreshData');
-const sidebarToggle = document.querySelector('#sidebarToggle');
 const screenGlow = document.querySelector('#screenGlow');
+const globalSearch = document.querySelector('#globalSearch');
+const desktopSearchInput = document.querySelector('#desktopSearchInput');
+const desktopSearchResults = document.querySelector('#desktopSearchResults');
+const mobileSearch = document.querySelector('#mobileSearch');
+const mobileSearchTrigger = document.querySelector('#mobileSearchTrigger');
+const mobileSearchSheet = document.querySelector('#mobileSearchSheet');
+const mobileSearchInput = document.querySelector('#mobileSearchInput');
+const mobileSearchResults = document.querySelector('#mobileSearchResults');
+const mobileSearchCloseButtons = document.querySelectorAll('[data-mobile-search-close]');
 const mobileInsight = document.querySelector('#mobileInsight');
 const mobileInsightFab = document.querySelector('#mobileInsightFab');
 const mobileInsightSheet = document.querySelector('#mobileInsightSheet');
@@ -36,8 +44,7 @@ function renderIcon(src, className = 'ui-icon') {
 
 const STORAGE_KEYS = {
   splashSeen: 'skyline:splash-seen-v1',
-  activeSection: 'skyline:active-section-v2',
-  sidebarCollapsed: 'skyline:sidebar-collapsed-v1'
+  activeSection: 'skyline:active-section-v3'
 };
 
 
@@ -65,6 +72,30 @@ const MOBILE_INSIGHT_META = {
       { title: 'reparo em atencao', text: 'etapa critica com R$ 89,7K parados.' },
       { title: 'pecas + reparo concentram custo', text: '64,9% do custo parado na operacao.' }
     ]
+  },
+  financeiro: {
+    icon: ICONS.sparks,
+    label: 'Abrir leitura rapida financeira',
+    kickerIcon: ICONS.sparks,
+    kicker: 'leitura rapida',
+    titleId: 'mobileInsightTitle',
+    action: 'abrir plano financeiro ›',
+    items: [
+      { title: 'caixa precisa de previsao', text: 'acompanhar entradas, saidas e saldo projetado por dia.' },
+      { title: 'margem em foco', text: 'cruzar faturamento, custo e lucro para evitar venda sem retorno.' }
+    ]
+  },
+  gestao: {
+    icon: ICONS.sparks,
+    label: 'Abrir leitura rapida gerencial',
+    kickerIcon: ICONS.sparks,
+    kicker: 'leitura rapida',
+    titleId: 'mobileInsightTitle',
+    action: 'abrir plano gerencial ›',
+    items: [
+      { title: 'decisao diaria centralizada', text: 'concentrar metas, alertas e indicadores principais por area.' },
+      { title: 'plano de acao visivel', text: 'manter prioridades claras para comercial, operacao e financeiro.' }
+    ]
   }
 };
 
@@ -84,7 +115,7 @@ const PAGE_META = {
   home: {
     kicker: 'home',
     icon: ICONS.home,
-    title: 'Central inteligente em construcao',
+    title: 'Central inteligente com plano de acao por area',
     documentTitle: 'Skyline Mobile | Home'
   },
   financeiro: {
@@ -112,8 +143,19 @@ let activeSection = null;
 let navigationToken = 0;
 let glowTimer = null;
 let sidebarAnimationTimer = null;
+let searchIndex = [];
+let lastSearchResults = [];
+let desktopSearchHasFocus = false;
+let mobileSearchHideTimer = null;
 const MOBILE_GLOW_QUERY = '(max-width: 767px)';
 
+// Tempo minimo para manter o splash visivel antes de liberar a interface.
+// Para mudar futuramente, ajuste apenas este valor em milissegundos.
+const MIN_SPLASH_TIME_MS = 1000;
+
+// Tempo usado apenas no primeiro carregamento completo do app.
+// Mantem o comportamento anterior de splash mais longo na primeira abertura.
+const FIRST_LOAD_SPLASH_TIME_MS = 2600;
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -151,19 +193,340 @@ async function boot() {
   const hasSeenSplash = localStorage.getItem(STORAGE_KEYS.splashSeen) === 'true';
 
   if (hasSeenSplash) {
-    showApp();
+    // Mantem o preload em segundo plano, como antes, mas segura o splash por pelo menos 1 segundo.
     preloadInitialEndpoints();
+    await wait(MIN_SPLASH_TIME_MS);
+    showApp();
     return;
   }
 
   try {
-    await Promise.all([preloadInitialEndpoints(), wait(2600)]);
+    // Primeiro acesso continua aguardando os dados iniciais e o tempo visual original do splash.
+    // Como FIRST_LOAD_SPLASH_TIME_MS e maior que MIN_SPLASH_TIME_MS, o minimo de 1 segundo ja fica garantido.
+    await Promise.all([preloadInitialEndpoints(), wait(FIRST_LOAD_SPLASH_TIME_MS)]);
   } finally {
     localStorage.setItem(STORAGE_KEYS.splashSeen, 'true');
     showApp();
   }
 }
 
+
+const SECTION_SEARCH_WORDS = {
+  home: 'home inicio principal central skyline ia ai inteligente resumo leitura geral plano acao area cards roxo spark sparks sparcos empresa estabilidade atencao',
+  comercial: 'comercial venda vendas canal canais loja whatsapp wpp site ecommerce marketplace marketplaces margem preco precos ticket crescimento queda diagnostico bu bus',
+  operacao: 'operacao operacional producao linha recebimento triagem gestao pecas reparo qualidade gargalo gargalos custo parado paradas os tempo medio retrabalho execucao',
+  financeiro: 'financeiro financas financa caixa margem lucro faturamento custo contas conciliacao fluxo entrada previsao saldo valor valores',
+  gestao: 'gestao gerencial gerencial metas meta okr okrs indicador indicadores alerta alertas decisao rotina acompanhamento diario controle visibilidade plano acao'
+};
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function cleanSearchText(value) {
+  return String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function getNodeTitle(node, fallback) {
+  const titleNode = node.querySelector('h2, h3, strong, .market-symbol strong');
+  const title = cleanSearchText(titleNode?.textContent);
+  return title || fallback;
+}
+
+function getNodeDescription(node, title) {
+  const fullText = cleanSearchText(node.textContent);
+  const description = cleanSearchText(fullText.replace(title, ''));
+  return description || fullText;
+}
+
+function buildSearchIndex() {
+  const index = [];
+
+  pageViews.forEach((view) => {
+    const section = view.dataset.view;
+    const meta = PAGE_META[section];
+    if (!section || !meta) return;
+
+    const sectionWords = SECTION_SEARCH_WORDS[section] || '';
+    const pageText = cleanSearchText(view.textContent);
+
+    index.push({
+      section,
+      type: 'area',
+      title: meta.kicker,
+      description: meta.title,
+      text: normalizeSearchText(`${sectionWords} ${meta.kicker} ${meta.title} ${pageText}`)
+    });
+
+    const cards = view.querySelectorAll('.action-plan-card, .market-row, .timeline-stop, .coming-soon, .mini-insight, .home-ai-box__status');
+    cards.forEach((card) => {
+      const title = getNodeTitle(card, meta.kicker);
+      const description = getNodeDescription(card, title);
+      const raw = cleanSearchText(`${sectionWords} ${meta.kicker} ${meta.title} ${title} ${description}`);
+
+      if (!raw || raw.length < 4) return;
+
+      index.push({
+        section,
+        type: 'item',
+        title,
+        description,
+        text: normalizeSearchText(raw)
+      });
+    });
+  });
+
+  searchIndex = index;
+}
+
+function scoreSearchItem(item, terms, normalizedQuery) {
+  const title = normalizeSearchText(item.title);
+  const description = normalizeSearchText(item.description);
+  const section = normalizeSearchText(item.section);
+  const searchable = item.text;
+  const matchesAllTerms = terms.every((term) => searchable.includes(term));
+
+  if (!matchesAllTerms) return 0;
+
+  let score = 10;
+  if (section.includes(normalizedQuery)) score += 35;
+  if (title === normalizedQuery) score += 60;
+  if (title.startsWith(normalizedQuery)) score += 42;
+  if (title.includes(normalizedQuery)) score += 28;
+  if (description.includes(normalizedQuery)) score += 12;
+  if (item.type === 'area') score += 8;
+
+  terms.forEach((term) => {
+    if (title.includes(term)) score += 10;
+    if (section.includes(term)) score += 8;
+  });
+
+  return score;
+}
+
+function getSearchResults(query) {
+  const normalizedQuery = normalizeSearchText(query);
+  const terms = normalizedQuery.split(' ').filter(Boolean);
+
+  if (!terms.length) return [];
+
+  return searchIndex
+    .map((item) => ({ ...item, score: scoreSearchItem(item, terms, normalizedQuery) }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, 'pt-BR'))
+    .slice(0, 8);
+}
+
+function renderSearchResults(container, query, options = {}) {
+  if (!container) return;
+
+  const mode = options.mode || 'desktop';
+  const normalizedQuery = cleanSearchText(query);
+
+  if (!normalizedQuery) {
+    lastSearchResults = [];
+    container.innerHTML = '<p class="search-empty">digite para buscar em home, comercial, operacao, financeiro e gestao.</p>';
+    if (mode === 'desktop') container.hidden = false;
+    return;
+  }
+
+  const results = getSearchResults(normalizedQuery);
+  lastSearchResults = results;
+
+  if (!results.length) {
+    container.innerHTML = `<p class="search-empty">nenhum resultado para "${escapeHtml(normalizedQuery)}".</p>`;
+    if (mode === 'desktop') container.hidden = false;
+    return;
+  }
+
+  container.innerHTML = results.map((item) => {
+    const description = cleanSearchText(item.description).slice(0, 132);
+    return `
+      <button class="search-result" type="button" role="option" data-search-section="${escapeHtml(item.section)}">
+        <span class="search-result__area">${escapeHtml(PAGE_META[item.section]?.kicker || item.section)}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(description)}${description.length >= 132 ? '...' : ''}</small>
+      </button>
+    `;
+  }).join('');
+
+  if (mode === 'desktop') container.hidden = false;
+}
+
+function closeDesktopSearchResults() {
+  if (!desktopSearchResults || !desktopSearchInput) return;
+
+  desktopSearchResults.hidden = true;
+  desktopSearchInput.setAttribute('aria-expanded', 'false');
+}
+
+function openDesktopSearchResults() {
+  if (!desktopSearchResults || !desktopSearchInput) return;
+
+  renderSearchResults(desktopSearchResults, desktopSearchInput.value, { mode: 'desktop' });
+  desktopSearchInput.setAttribute('aria-expanded', 'true');
+}
+
+function closeMobileSearch() {
+  if (!mobileSearch || !mobileSearchSheet || !mobileSearchTrigger) return;
+
+  window.clearTimeout(mobileSearchHideTimer);
+  mobileSearch.classList.remove('is-open');
+  mobileSearchTrigger.setAttribute('aria-expanded', 'false');
+  mobileSearchSheet.setAttribute('aria-hidden', 'true');
+
+  mobileSearchHideTimer = window.setTimeout(() => {
+    if (!mobileSearch.classList.contains('is-open')) mobileSearch.hidden = true;
+  }, 280);
+}
+
+function openMobileSearch() {
+  if (!mobileSearch || !mobileSearchSheet || !mobileSearchInput || !mobileSearchTrigger) return;
+
+  closeMobileInsight();
+  window.clearTimeout(mobileSearchHideTimer);
+  mobileSearch.hidden = false;
+  mobileSearchTrigger.setAttribute('aria-expanded', 'true');
+  mobileSearchSheet.setAttribute('aria-hidden', 'false');
+  mobileSearchInput.value = desktopSearchInput?.value || mobileSearchInput.value || '';
+  if (mobileSearchResults) mobileSearchResults.innerHTML = '';
+
+  window.requestAnimationFrame(() => {
+    mobileSearch.classList.add('is-open');
+    mobileSearchInput.focus?.();
+  });
+}
+
+function closeSearchPanels() {
+  closeDesktopSearchResults();
+  closeMobileSearch();
+}
+
+function syncSearchInputs(value, source) {
+  if (source !== 'desktop' && desktopSearchInput) desktopSearchInput.value = value;
+  if (source !== 'mobile' && mobileSearchInput) mobileSearchInput.value = value;
+}
+
+function selectSearchResult(section) {
+  if (!PAGE_META[section]) return;
+
+  closeSearchPanels();
+  setActiveSection(section, { animate: true });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleSearchResultClick(event) {
+  const resultButton = event.target.closest('[data-search-section]');
+  if (!resultButton) return;
+
+  selectSearchResult(resultButton.dataset.searchSection);
+}
+
+function handleSearchEnter(sourceInput) {
+  const query = sourceInput?.value || desktopSearchInput?.value || mobileSearchInput?.value || '';
+  const firstResult = getSearchResults(query)[0];
+  if (!firstResult) return;
+
+  selectSearchResult(firstResult.section);
+}
+
+function initGlobalSearch() {
+  buildSearchIndex();
+
+  if (desktopSearchInput && desktopSearchResults) {
+    desktopSearchInput.addEventListener('focus', () => {
+      desktopSearchHasFocus = true;
+      closeDesktopSearchResults();
+    });
+
+    desktopSearchInput.addEventListener('input', () => {
+      syncSearchInputs(desktopSearchInput.value, 'desktop');
+      closeDesktopSearchResults();
+    });
+
+    desktopSearchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeDesktopSearchResults();
+        desktopSearchInput.blur();
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearchEnter(desktopSearchInput);
+      }
+    });
+
+    desktopSearchInput.addEventListener('blur', () => {
+      desktopSearchHasFocus = false;
+    });
+
+    desktopSearchResults.addEventListener('click', handleSearchResultClick);
+  }
+
+  if (mobileSearchTrigger) {
+    mobileSearchTrigger.addEventListener('click', openMobileSearch);
+  }
+
+  if (mobileSearchInput && mobileSearchResults) {
+    mobileSearchInput.addEventListener('input', () => {
+      syncSearchInputs(mobileSearchInput.value, 'mobile');
+      if (mobileSearchResults) mobileSearchResults.innerHTML = '';
+    });
+
+    mobileSearchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeMobileSearch();
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearchEnter(mobileSearchInput);
+      }
+    });
+
+    mobileSearchResults.addEventListener('click', handleSearchResultClick);
+  }
+
+  mobileSearchCloseButtons.forEach((button) => {
+    button.addEventListener('click', closeMobileSearch);
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!globalSearch || !desktopSearchResults || desktopSearchResults.hidden) return;
+    if (globalSearch.contains(event.target)) return;
+
+    closeDesktopSearchResults();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    closeSearchPanels();
+  });
+
+  window.addEventListener('resize', () => {
+    if (!isMobileViewport() && mobileSearch && !mobileSearch.hidden) closeMobileSearch();
+    if (desktopSearchHasFocus) closeDesktopSearchResults();
+  });
+}
 
 function closeMobileInsight() {
   if (!mobileInsight || !mobileInsightFab || !mobileInsightSheet) return;
@@ -196,6 +559,32 @@ function renderMobileInsight(section) {
     const text = item.text.includes('<') ? item.text : `<span>${item.text}</span>`;
     return `<article class="mini-insight"><strong${titleId}>${item.title}</strong>${text}</article>`;
   }).join('');
+}
+
+
+function syncNavIndicator(section) {
+  document.querySelectorAll('.side-nav, .bottom-nav').forEach((nav) => {
+    const buttons = Array.from(nav.querySelectorAll('[data-section]'));
+    const index = buttons.findIndex((button) => button.dataset.section === section);
+    const activeButton = buttons[Math.max(index, 0)];
+
+    nav.style.setProperty('--nav-index', String(Math.max(index, 0)));
+
+    // No mobile o indicador precisa usar medida real do botao.
+    // Isso evita quebra quando a largura da tela muda ou quando a barra fica oculta no primeiro paint.
+    if (activeButton) {
+      nav.style.setProperty('--nav-indicator-x', `${activeButton.offsetLeft}px`);
+      nav.style.setProperty('--nav-indicator-y', `${activeButton.offsetTop}px`);
+      nav.style.setProperty('--nav-indicator-w', `${activeButton.offsetWidth}px`);
+      nav.style.setProperty('--nav-indicator-h', `${activeButton.offsetHeight}px`);
+    }
+  });
+}
+
+function scheduleNavIndicatorSync(section = activeSection || 'home') {
+  syncNavIndicator(section);
+  window.requestAnimationFrame(() => syncNavIndicator(section));
+  window.setTimeout(() => syncNavIndicator(section), 80);
 }
 
 function syncMobileInsight(section) {
@@ -234,7 +623,7 @@ function triggerScreenGlow(options = {}) {
 }
 
 function setActiveSection(section, options = {}) {
-  const safeSection = PAGE_META[section] ? section : 'comercial';
+  const safeSection = PAGE_META[section] ? section : 'home';
   const meta = PAGE_META[safeSection];
   const shouldAnimate = options.animate !== false && activeSection && activeSection !== safeSection;
   const token = ++navigationToken;
@@ -244,11 +633,18 @@ function setActiveSection(section, options = {}) {
   navButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.section === safeSection);
   });
+  scheduleNavIndicatorSync(safeSection);
 
-  if (pageKicker) pageKicker.innerHTML = `${renderIcon(meta.icon, 'ui-icon eyebrow__icon')} ${meta.kicker}`;
+  // Controla o cabecalho mobile:
+  // - home: exibe somente a logo Skyline.
+  // - demais telas: exibe o texto normal da area ativa.
+  if (app) app.classList.toggle('is-home-view', safeSection === 'home');
+
+  // Cabecalho limpo: sem icone e sem subtitulo visivel.
+  // O titulo completo continua no <title> do navegador para manter contexto/acessibilidade.
+  if (pageKicker) pageKicker.textContent = meta.kicker;
   if (pageTitle) pageTitle.textContent = meta.title;
   document.title = meta.documentTitle;
-  localStorage.setItem(STORAGE_KEYS.activeSection, safeSection);
 
   if (!nextView || currentView === nextView) {
     activeSection = safeSection;
@@ -303,11 +699,20 @@ function setActiveSection(section, options = {}) {
 }
 
 function initNavigation() {
-  const saved = localStorage.getItem(STORAGE_KEYS.activeSection) || 'comercial';
-  setActiveSection(saved, { animate: false });
+  // Sempre inicia o app na Home ao abrir/recarregar, tanto no desktop quanto no mobile.
+  // A navegacao continua normal depois do boot, mas nao usamos mais a ultima categoria salva.
+  localStorage.removeItem(STORAGE_KEYS.activeSection);
+  setActiveSection('home', { animate: false });
 
   navButtons.forEach((button) => {
-    button.addEventListener('click', () => setActiveSection(button.dataset.section, { animate: true }));
+    button.addEventListener('click', () => {
+      closeSearchPanels();
+      setActiveSection(button.dataset.section, { animate: true });
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    scheduleNavIndicatorSync(activeSection || 'home');
   });
 }
 
@@ -325,33 +730,20 @@ function runSidebarAnimation() {
 }
 
 function applySidebarState(collapsed, options = {}) {
-  if (!app || !sidebarToggle) return;
+  if (!app) return;
 
   const shouldAnimate = options.animate === true;
   app.classList.toggle('is-sidebar-collapsed', collapsed);
-  sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
-  sidebarToggle.setAttribute('aria-label', collapsed ? 'Expandir menu lateral' : 'Recolher menu lateral');
-
-  const toggleIcon = sidebarToggle.querySelector('.sidebar-toggle__icon');
-  if (toggleIcon) {
-    // Sem flip, rotate ou scaleX: cada estado usa o SVG original correto.
-    toggleIcon.src = collapsed ? ICONS.front : ICONS.back;
-    toggleIcon.style.transform = '';
-  }
 
   if (shouldAnimate) runSidebarAnimation();
-  localStorage.setItem(STORAGE_KEYS.sidebarCollapsed, collapsed ? 'true' : 'false');
 }
 
 function initSidebarToggle() {
-  if (!sidebarToggle || !app) return;
+  if (!app) return;
 
-  const savedCollapsed = localStorage.getItem(STORAGE_KEYS.sidebarCollapsed) === 'true';
-  applySidebarState(savedCollapsed, { animate: false });
-
-  sidebarToggle.addEventListener('click', () => {
-    applySidebarState(!app.classList.contains('is-sidebar-collapsed'), { animate: true });
-  });
+  // Sidebar desktop travada no estado recolhido.
+  // A nav mobile continua usando as regras responsivas do CSS.
+  applySidebarState(true, { animate: false });
 }
 
 
@@ -439,6 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initSidebarToggle();
   initMobileInsight();
+  initGlobalSearch();
   initRefreshButton();
   initPwaInstall();
   registerServiceWorker();
