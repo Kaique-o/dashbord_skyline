@@ -1,9 +1,10 @@
-const CACHE_NAME = 'skyline-mobile-v35-header-search-clean';
+const CACHE_NAME = 'skyline-mobile-v41-subtelas-pastas-sem-splash';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './subpage.js',
   './manifest.webmanifest',
   './favicon.ico',
   './apple-touch-icon.png',
@@ -29,7 +30,38 @@ const APP_SHELL = [
   './assets/icons/back.svg',
   './assets/icons/refresh.svg',
   './assets/icons/tarket.svg',
-  './assets/icons/busca.svg'
+  './assets/icons/busca.svg',
+  './assets/icons/excluir.svg',
+  './subtelas/comercial/loja.html',
+  './subtelas/comercial/whatsapp.html',
+  './subtelas/comercial/site.html',
+  './subtelas/comercial/marketplaces.html',
+  './subtelas/operacao/recebimento.html',
+  './subtelas/operacao/triagem.html',
+  './subtelas/operacao/gestao-de-pecas.html',
+  './subtelas/operacao/reparo.html',
+  './subtelas/operacao/qualidade.html',
+  './subtelas/home/plano-comercial.html',
+  './subtelas/home/plano-operacional.html',
+  './subtelas/home/plano-financeiro.html',
+  './subtelas/home/plano-gerencial.html',
+  './subtelas/financeiro/lucro.html',
+  './subtelas/financeiro/dre.html',
+  './subtelas/financeiro/contas-a-pagar.html',
+  './subtelas/financeiro/contas-a-receber.html',
+  './subtelas/financeiro/precificacao.html',
+  './subtelas/financeiro/prejuizos.html',
+  './subtelas/financeiro/contabil.html',
+  './subtelas/gestao/otimizacao.html',
+  './subtelas/gestao/precificacao.html',
+  './subtelas/gestao/vagas.html',
+  './subtelas/gestao/melhorias.html',
+  './subtelas/gestao/growth.html',
+  './subtelas/gestao/oportunidades.html',
+  './subtelas/gestao/gerencia-de-cliente.html',
+  './subtelas/gestao/gerencia-de-estoque.html',
+  './subtelas/gestao/gerencia-de-produto.html',
+  './subtelas/gestao/gerencia-de-preco.html'
 ];
 
 self.addEventListener('install', (event) => {

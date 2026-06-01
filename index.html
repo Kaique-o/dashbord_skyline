@@ -1,347 +1,496 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#7436f5" />
-  <meta name="description" content="Dashboard responsivo Skyline Mobile para gestao, comercial, operacao e central de IA." />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Skyline" />
-
-  <title>Skyline Mobile | Home</title>
-
-  <link rel="icon" href="favicon.ico" sizes="any" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#7436f5" name="theme-color"/>
+<meta content="Dashboard responsivo Skyline Mobile para gestao, comercial, operacao e central de IA." name="description"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Skyline" name="apple-mobile-web-app-title"/>
+<title>Skyline Mobile | Home</title>
+<link href="favicon.ico" rel="icon" sizes="any"/>
+<link href="assets/icon-192.png" rel="icon" sizes="192x192" type="image/png"/>
+<link href="apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="styles.css" rel="stylesheet"/>
 </head>
 <body>
-  <noscript>Ative o JavaScript para usar o painel Skyline.</noscript>
-
-  <section class="splash" id="splash" aria-label="Carregando Skyline Mobile" role="status">
-    <picture>
-      <source media="(max-width: 767px)" srcset="assets/splash-mobile.png" />
-      <img class="splash__image" src="assets/splash-desktop.png" alt="Skyline Mobile" />
-    </picture>
-    <div class="splash__loader" aria-hidden="true">
-      <span></span><span></span><span></span>
-    </div>
-  </section>
-
-  <div class="app-shell is-loading is-sidebar-collapsed" id="app" aria-hidden="true">
-    <div class="screen-glow" id="screenGlow" aria-hidden="true"></div>
-    <aside class="sidebar" aria-label="Menu principal">
-      <button class="brand" data-section="home" type="button" aria-label="Ir para Home">
-        <img src="assets/logo-skyline-desktop.png" alt="Skyline Mobile" class="brand__logo brand__logo--full" />
-        <img src="assets/logo-skyline-mark.png" alt="Skyline Mobile" class="brand__logo brand__logo--mark" />
-      </button>
-
-      <nav class="side-nav" id="sidebarNav">
-        <button class="nav-item is-active" data-section="home" type="button" aria-label="Ir para home" title="home">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/home.svg" alt="" /></span>
-          <span class="nav-label">home</span>
-        </button>
-        <button class="nav-item" data-section="comercial" type="button" aria-label="Ir para comercial" title="comercial">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" /></span>
-          <span class="nav-label">comercial</span>
-        </button>
-        <button class="nav-item" data-section="operacao" type="button" aria-label="Ir para operacao" title="operacao">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" /></span>
-          <span class="nav-label">operacao</span>
-        </button>
-        <button class="nav-item" data-section="financeiro" type="button" aria-label="Ir para financeiro" title="financeiro">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/money.svg" alt="" /></span>
-          <span class="nav-label">financeiro</span>
-        </button>
-        <button class="nav-item" data-section="gestao" type="button" aria-label="Ir para gestao" title="gestao">
-          <span class="nav-icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" /></span>
-          <span class="nav-label">gestao</span>
-        </button>
-      </nav>
-
-    </aside>
-
-    <main class="main-content">
-      <header class="topbar">
-        <div class="topbar__headline">
-          <p class="eyebrow" id="pageKicker">home</p>
-          <h1 id="pageTitle" class="sr-only">Central inteligente com plano de acao por area</h1>
-          <img src="assets/logo-skyline-desktop.png" alt="Skyline Mobile" class="topbar__mobile-logo" />
-        </div>
-
-        <div class="topbar__actions">
-          <div class="global-search" id="globalSearch">
-            <label class="search search--desktop" for="desktopSearchInput" aria-label="Buscar no app">
-              <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
-              <input id="desktopSearchInput" type="search" placeholder="buscar no app..." autocomplete="off" enterkeyhint="search" aria-controls="desktopSearchResults" aria-expanded="false" />
-            </label>
-
-            <button class="search search--mobile-trigger" id="mobileSearchTrigger" type="button" aria-label="Abrir busca global" aria-expanded="false" aria-controls="mobileSearchSheet">
-              <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
-            </button>
-
-            <div class="search-results" id="desktopSearchResults" role="listbox" aria-label="Resultados da busca" hidden></div>
-          </div>
-
-          <button class="icon-button refresh-button" id="refreshData" type="button" aria-label="Atualizar informacoes" title="Atualizar informacoes">
-            <img class="refresh-icon ui-icon" src="assets/icons/refresh.svg" alt="" aria-hidden="true" />
-          </button>
-        </div>
-      </header>
-
-      <section class="page-stage" aria-live="polite">
-        <section class="page-view" data-view="comercial" aria-labelledby="comercial-title" hidden>
-          <h2 class="sr-only" id="comercial-title">Comercial</h2>
-          <section class="market-layout">
-            <div class="market-board" aria-label="Lista de BUs comerciais">
-              <article class="market-row market-row--up">
-                <div class="market-symbol">
-                  <strong>LOJA</strong>
-                  <span>loja fisica</span>
-                </div>
-                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,34 18,28 34,21 50,24 66,18 82,16 98,11 114,13 132,7 148,4" /></svg>
-                <div class="market-value">
-                  <strong>R$ 842K</strong>
-                  <span>+15,6%</span>
-                </div>
-              </article>
-
-              <article class="market-row market-row--up">
-                <div class="market-symbol">
-                  <strong>WPP</strong>
-                  <span>whatsapp</span>
-                </div>
-                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,33 18,30 34,31 50,23 66,26 82,18 98,20 114,14 132,9 148,7" /></svg>
-                <div class="market-value">
-                  <strong>R$ 416K</strong>
-                  <span>+9,4%</span>
-                </div>
-              </article>
-
-              <article class="market-row market-row--up">
-                <div class="market-symbol">
-                  <strong>SITE</strong>
-                  <span>ecommerce proprio</span>
-                </div>
-                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,28 18,30 34,24 50,25 66,19 82,21 98,15 114,17 132,10 148,6" /></svg>
-                <div class="market-value">
-                  <strong>R$ 298K</strong>
-                  <span>+7,1%</span>
-                </div>
-              </article>
-
-              <article class="market-row market-row--down">
-                <div class="market-symbol">
-                  <strong>MKT</strong>
-                  <span>marketplaces</span>
-                </div>
-                <svg class="market-spark" viewBox="0 0 150 44" aria-hidden="true"><polyline points="2,9 18,11 34,16 50,14 66,21 82,20 98,27 114,24 132,30 148,34" /></svg>
-                <div class="market-value">
-                  <strong>R$ 536K</strong>
-                  <span>-2,8%</span>
-                </div>
-              </article>
-            </div>
-
-            <aside class="commercial-side panel-card" aria-label="Leitura rapida comercial">
-              <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
-              <article class="mini-insight">
-                <strong>loja lidera o dia</strong>
-                <span>maior crescimento e maior ticket medio.</span>
-              </article>
-              <article class="mini-insight">
-                <strong>marketplaces em atencao</strong>
-                <span>queda pede revisao de preco e margem.</span>
-              </article>
-              <button class="full-button" type="button">abrir diagnostico ›</button>
-            </aside>
-          </section>
-        </section>
-
-        <section class="page-view" data-view="operacao" aria-labelledby="operacao-title" hidden>
-          <h2 class="sr-only" id="operacao-title">Operacao</h2>
-          <section class="operation-layout">
-            <div class="operation-timeline panel-card" aria-label="Etapas da producao">
-              <article class="timeline-stop">
-                <span class="timeline-marker">1</span>
-                <div class="timeline-stop__content">
-                  <header><div><h3>recebimento</h3><p>entrada, conferencia e registro</p></div><strong>R$ 18,4K</strong></header>
-                  <div class="timeline-meta"><span>14 OS paradas</span><span>tempo medio 1h12</span></div>
-                </div>
-              </article>
-
-              <article class="timeline-stop">
-                <span class="timeline-marker">2</span>
-                <div class="timeline-stop__content">
-                  <header><div><h3>triagem</h3><p>diagnostico inicial e priorizacao</p></div><strong>R$ 42,1K</strong></header>
-                  <div class="timeline-meta"><span>31 OS paradas</span><span>tempo medio 2h40</span></div>
-                </div>
-              </article>
-
-              <article class="timeline-stop">
-                <span class="timeline-marker">3</span>
-                <div class="timeline-stop__content">
-                  <header><div><h3>gestao de pecas</h3><p>separacao, compra e reserva</p></div><strong>R$ 63,9K</strong></header>
-                  <div class="timeline-meta"><span>42 OS paradas</span><span>tempo medio 5h05</span></div>
-                </div>
-              </article>
-
-              <article class="timeline-stop timeline-stop--alert">
-                <span class="timeline-marker">4</span>
-                <div class="timeline-stop__content">
-                  <header><div><h3>reparo</h3><p>execucao tecnica e retrabalho</p></div><strong>R$ 89,7K</strong></header>
-                  <div class="timeline-meta"><span>68 OS paradas</span><span>maior gargalo</span></div>
-                </div>
-              </article>
-
-              <article class="timeline-stop">
-                <span class="timeline-marker">5</span>
-                <div class="timeline-stop__content">
-                  <header><div><h3>qualidade</h3><p>teste final e liberacao</p></div><strong>R$ 22,3K</strong></header>
-                  <div class="timeline-meta"><span>29 OS paradas</span><span>tempo medio 1h55</span></div>
-                </div>
-              </article>
-            </div>
-
-            <aside class="operation-side panel-card" aria-label="Leitura rapida da operacao">
-              <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
-              <article class="mini-insight">
-                <strong>reparo em atencao</strong>
-                <span>etapa critica com R$ 89,7K parados.</span>
-              </article>
-              <article class="mini-insight">
-                <strong>pecas + reparo concentram custo</strong>
-                <span>64,9% do custo parado na operacao.</span>
-              </article>
-              <button class="full-button" type="button">abrir plano de acao ›</button>
-            </aside>
-          </section>
-        </section>
-
-        <section class="page-view is-active" data-view="home" aria-label="Home Skyline">
-          <section class="home-ai-box panel-card" aria-label="Planos de acao por categoria">
-            <span class="home-ai-box__spark home-ai-box__spark--top"><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span>
-            <span class="home-ai-box__spark home-ai-box__spark--bottom"><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span>
-
-            <div class="home-ai-box__intro" aria-label="Resumo geral da empresa">
-              <article class="home-ai-box__status home-ai-box__status--full">
-                <span>leitura geral</span>
-                <strong>estavel com pontos de atencao</strong>
-                <small>atualizado pela central skyline</small>
-              </article>
-            </div>
-
-            <div class="action-plan-grid" aria-label="Planos de acao por categoria">
-              <article class="action-plan-card">
-                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></div>
-                <div>
-                  <span class="action-plan-card__tag">comercial</span>
-                  <h3>priorizar canais com margem real</h3>
-                  <p>Revisar precos, separar venda por canal e destacar produtos com maior giro e menor impacto no caixa.</p>
-                </div>
-              </article>
-
-              <article class="action-plan-card">
-                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></div>
-                <div>
-                  <span class="action-plan-card__tag">operacao</span>
-                  <h3>remover gargalos da linha</h3>
-                  <p>Monitorar etapas paradas, tempo medio por status e custo preso em reparo, triagem e qualidade.</p>
-                </div>
-              </article>
-
-              <article class="action-plan-card">
-                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></div>
-                <div>
-                  <span class="action-plan-card__tag">financeiro</span>
-                  <h3>blindar caixa e margem</h3>
-                  <p>Acompanhar contas criticas, previsao de entrada, custo parado e diferenca entre faturamento e lucro.</p>
-                </div>
-              </article>
-
-              <article class="action-plan-card">
-                <div class="action-plan-card__icon"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></div>
-                <div>
-                  <span class="action-plan-card__tag">gerencial</span>
-                  <h3>fechar rotina de decisao</h3>
-                  <p>Centralizar metas, alertas, indicadores por area e proximas acoes para acompanhamento diario.</p>
-                </div>
-              </article>
-            </div>
-          </section>
-        </section>
-
-        <section class="page-view" data-view="financeiro" aria-labelledby="financeiro-title" hidden>
-          <section class="coming-soon panel-card">
-            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span>
-            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span> financas</p>
-            <h2 id="financeiro-title">em breve...</h2>
-            <p>Fluxo de caixa, margem, conciliacao e indicadores financeiros entram nesta tela.</p>
-          </section>
-        </section>
-
-        <section class="page-view" data-view="gestao" aria-labelledby="gestao-title" hidden>
-          <section class="coming-soon panel-card">
-            <span class="coming-soon__icon"><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span>
-            <p class="section-kicker"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span> gestao</p>
-            <h2 id="gestao-title">em breve...</h2>
-            <p>Metas, OKRs, indicadores por area e planos de acao ficarao centralizados aqui.</p>
-          </section>
-        </section>
-      </section>
-    </main>
-
-    <div class="mobile-search" id="mobileSearch" hidden>
-      <div class="mobile-search__backdrop" data-mobile-search-close aria-hidden="true"></div>
-
-      <aside class="mobile-search__sheet panel-card" id="mobileSearchSheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mobileSearchTitle" aria-hidden="true">
-        <h2 class="sr-only" id="mobileSearchTitle">Busca global</h2>
-
-        <label class="mobile-search__field" for="mobileSearchInput" aria-label="Buscar no app">
-          <span class="search__icon" aria-hidden="true"><img class="ui-icon" src="assets/icons/busca.svg" alt="" /></span>
-          <input id="mobileSearchInput" type="search" placeholder="buscar no app..." autocomplete="off" enterkeyhint="search" aria-controls="mobileSearchResults" />
-        </label>
-
-        <div class="mobile-search__results" id="mobileSearchResults" role="listbox" aria-label="Resultados da busca mobile"></div>
-      </aside>
-    </div>
-
-    <div class="mobile-insight" id="mobileInsight" hidden>
-      <button class="mobile-insight__fab" id="mobileInsightFab" type="button" aria-label="Abrir leitura rapida" aria-expanded="false" aria-controls="mobileInsightSheet">
-        <span aria-hidden="true" id="mobileInsightFabIcon"><img class="ui-icon mobile-insight__fab-icon" src="assets/icons/sparks.svg" alt="" /></span>
-      </button>
-
-      <div class="mobile-insight__backdrop" data-mobile-insight-close aria-hidden="true"></div>
-
-      <aside class="mobile-insight__sheet panel-card" id="mobileInsightSheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mobileInsightTitle" aria-hidden="true">
-        <button class="mobile-insight__close" type="button" data-mobile-insight-close aria-label="Fechar leitura rapida">×</button>
-        <p class="section-kicker" id="mobileInsightKicker"><span><img class="ui-icon" src="assets/icons/sparks.svg" alt="" aria-hidden="true" /></span> leitura rapida</p>
-        <div id="mobileInsightContent">
-          <article class="mini-insight">
-            <strong id="mobileInsightTitle">loja lidera o dia</strong>
-            <span>maior crescimento e maior ticket medio.</span>
-          </article>
-          <article class="mini-insight">
-            <strong>marketplaces em atencao</strong>
-            <span>queda pede revisao de preco e margem.</span>
-          </article>
-        </div>
-        <button class="full-button" id="mobileInsightAction" type="button">abrir diagnostico ›</button>
-      </aside>
-    </div>
-
-    <nav class="bottom-nav" aria-label="Menu inferior">
-      <button data-section="comercial" type="button" aria-label="Ir para comercial" title="comercial"><span><img class="ui-icon" src="assets/icons/carrinho.svg" alt="" aria-hidden="true" /></span></button>
-      <button data-section="operacao" type="button" aria-label="Ir para operacao" title="operacao"><span><img class="ui-icon" src="assets/icons/fabrica.svg" alt="" aria-hidden="true" /></span></button>
-      <button class="is-active" data-section="home" type="button" aria-label="Ir para home" title="home"><span><img class="ui-icon" src="assets/icons/home.svg" alt="" aria-hidden="true" /></span></button>
-      <button data-section="financeiro" type="button" aria-label="Ir para financeiro" title="financeiro"><span><img class="ui-icon" src="assets/icons/money.svg" alt="" aria-hidden="true" /></span></button>
-      <button data-section="gestao" type="button" aria-label="Ir para gestao" title="gestao"><span><img class="ui-icon" src="assets/icons/tarket.svg" alt="" aria-hidden="true" /></span></button>
-    </nav>
-  </div>
-
-  <button class="install-app" id="installApp" type="button" hidden>Instalar app</button>
-  <script src="app.js" defer></script>
+<noscript>Ative o JavaScript para usar o painel Skyline.</noscript>
+<section aria-label="Carregando Skyline Mobile" class="splash" id="splash" role="status">
+<picture>
+<source media="(max-width: 767px)" srcset="assets/splash-mobile.png"/>
+<img alt="Skyline Mobile" class="splash__image" src="assets/splash-desktop.png"/>
+</picture>
+<div aria-hidden="true" class="splash__loader">
+<span></span><span></span><span></span>
+</div>
+</section>
+<div aria-hidden="true" class="app-shell is-loading is-sidebar-collapsed" id="app">
+<div aria-hidden="true" class="screen-glow" id="screenGlow"></div>
+<aside aria-label="Menu principal" class="sidebar">
+<button aria-label="Ir para Home" class="brand" data-section="home" type="button">
+<img alt="Skyline Mobile" class="brand__logo brand__logo--full" src="assets/logo-skyline-desktop.png"/>
+<img alt="Skyline Mobile" class="brand__logo brand__logo--mark" src="assets/logo-skyline-mark.png"/>
+</button>
+<nav class="side-nav" id="sidebarNav">
+<button aria-label="Ir para home" class="nav-item is-active" data-section="home" title="home" type="button">
+<span aria-hidden="true" class="nav-icon"><img alt="" class="ui-icon" src="assets/icons/home.svg"/></span>
+<span class="nav-label">home</span>
+</button>
+<button aria-label="Ir para comercial" class="nav-item" data-section="comercial" title="comercial" type="button">
+<span aria-hidden="true" class="nav-icon"><img alt="" class="ui-icon" src="assets/icons/carrinho.svg"/></span>
+<span class="nav-label">comercial</span>
+</button>
+<button aria-label="Ir para operacao" class="nav-item" data-section="operacao" title="operacao" type="button">
+<span aria-hidden="true" class="nav-icon"><img alt="" class="ui-icon" src="assets/icons/fabrica.svg"/></span>
+<span class="nav-label">operacao</span>
+</button>
+<button aria-label="Ir para financeiro" class="nav-item" data-section="financeiro" title="financeiro" type="button">
+<span aria-hidden="true" class="nav-icon"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<span class="nav-label">financeiro</span>
+</button>
+<button aria-label="Ir para gestao" class="nav-item" data-section="gestao" title="gestao" type="button">
+<span aria-hidden="true" class="nav-icon"><img alt="" class="ui-icon" src="assets/icons/tarket.svg"/></span>
+<span class="nav-label">gestao</span>
+</button>
+</nav>
+</aside>
+<main class="main-content">
+<header class="topbar">
+<div class="topbar__headline">
+<p class="eyebrow" id="pageKicker">home</p>
+<h1 class="sr-only" id="pageTitle">Central inteligente com plano de acao por area</h1>
+<img alt="Skyline Mobile" class="topbar__mobile-logo" src="assets/logo-skyline-desktop.png"/>
+</div>
+<div class="topbar__actions">
+<div class="global-search" id="globalSearch">
+<label aria-label="Buscar no app" class="search search--desktop" for="desktopSearchInput">
+<span aria-hidden="true" class="search__icon"><img alt="" class="ui-icon" src="assets/icons/busca.svg"/></span>
+<input aria-controls="desktopSearchResults" aria-expanded="false" autocomplete="off" enterkeyhint="search" id="desktopSearchInput" placeholder="buscar no app..." type="search"/>
+</label>
+<button aria-controls="mobileSearchSheet" aria-expanded="false" aria-label="Abrir busca global" class="search search--mobile-trigger" id="mobileSearchTrigger" type="button">
+<span aria-hidden="true" class="search__icon"><img alt="" class="ui-icon" src="assets/icons/busca.svg"/></span>
+</button>
+<div aria-label="Resultados da busca" class="search-results" hidden="" id="desktopSearchResults" role="listbox"></div>
+</div>
+<button aria-label="Atualizar informacoes" class="icon-button refresh-button" id="refreshData" title="Atualizar informacoes" type="button">
+<img alt="" aria-hidden="true" class="refresh-icon ui-icon" src="assets/icons/refresh.svg"/>
+</button>
+</div>
+</header>
+<section aria-live="polite" class="page-stage">
+<section aria-labelledby="comercial-title" class="page-view" data-view="comercial" hidden="">
+<h2 class="sr-only" id="comercial-title">Comercial</h2>
+<section class="market-layout">
+<div aria-label="Lista de BUs comerciais" class="market-board">
+<a aria-label="abrir loja" class="market-row market-row--up clickable-card" href="subtelas/comercial/loja.html">
+<div class="market-symbol">
+<strong>LOJA</strong>
+<span>loja fisica</span>
+</div>
+<svg aria-hidden="true" class="market-spark" viewbox="0 0 150 44"><polyline points="2,34 18,28 34,21 50,24 66,18 82,16 98,11 114,13 132,7 148,4"></polyline></svg>
+<div class="market-value">
+<strong>R$ 842K</strong>
+<span>+15,6%</span>
+</div>
+</a>
+<a aria-label="abrir whatsapp" class="market-row market-row--up clickable-card" href="subtelas/comercial/whatsapp.html">
+<div class="market-symbol">
+<strong>WPP</strong>
+<span>whatsapp</span>
+</div>
+<svg aria-hidden="true" class="market-spark" viewbox="0 0 150 44"><polyline points="2,33 18,30 34,31 50,23 66,26 82,18 98,20 114,14 132,9 148,7"></polyline></svg>
+<div class="market-value">
+<strong>R$ 416K</strong>
+<span>+9,4%</span>
+</div>
+</a>
+<a aria-label="abrir site" class="market-row market-row--up clickable-card" href="subtelas/comercial/site.html">
+<div class="market-symbol">
+<strong>SITE</strong>
+<span>ecommerce proprio</span>
+</div>
+<svg aria-hidden="true" class="market-spark" viewbox="0 0 150 44"><polyline points="2,28 18,30 34,24 50,25 66,19 82,21 98,15 114,17 132,10 148,6"></polyline></svg>
+<div class="market-value">
+<strong>R$ 298K</strong>
+<span>+7,1%</span>
+</div>
+</a>
+<a aria-label="abrir marketplaces" class="market-row market-row--down clickable-card" href="subtelas/comercial/marketplaces.html">
+<div class="market-symbol">
+<strong>MKT</strong>
+<span>marketplaces</span>
+</div>
+<svg aria-hidden="true" class="market-spark" viewbox="0 0 150 44"><polyline points="2,9 18,11 34,16 50,14 66,21 82,20 98,27 114,24 132,30 148,34"></polyline></svg>
+<div class="market-value">
+<strong>R$ 536K</strong>
+<span>-2,8%</span>
+</div>
+</a>
+</div>
+<aside aria-label="Leitura rapida comercial" class="commercial-side panel-card">
+<p class="section-kicker"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span> leitura rapida</p>
+<article class="mini-insight">
+<strong>loja lidera o dia</strong>
+<span>maior crescimento e maior ticket medio.</span>
+</article>
+<article class="mini-insight">
+<strong>marketplaces em atencao</strong>
+<span>queda pede revisao de preco e margem.</span>
+</article>
+<a class="full-button" href="subtelas/comercial/loja.html">abrir diagnostico ›</a>
+</aside>
+</section>
+</section>
+<section aria-labelledby="operacao-title" class="page-view" data-view="operacao" hidden="">
+<h2 class="sr-only" id="operacao-title">Operacao</h2>
+<section class="operation-layout">
+<div aria-label="Etapas da producao" class="operation-timeline panel-card">
+<a aria-label="abrir recebimento" class="timeline-stop clickable-card" href="subtelas/operacao/recebimento.html">
+<span class="timeline-marker">1</span>
+<div class="timeline-stop__content">
+<header><div><h3>recebimento</h3><p>entrada, conferencia e registro</p></div><strong>R$ 18,4K</strong></header>
+<div class="timeline-meta"><span>14 OS paradas</span><span>tempo medio 1h12</span></div>
+</div>
+</a>
+<a aria-label="abrir triagem" class="timeline-stop clickable-card" href="subtelas/operacao/triagem.html">
+<span class="timeline-marker">2</span>
+<div class="timeline-stop__content">
+<header><div><h3>triagem</h3><p>diagnostico inicial e priorizacao</p></div><strong>R$ 42,1K</strong></header>
+<div class="timeline-meta"><span>31 OS paradas</span><span>tempo medio 2h40</span></div>
+</div>
+</a>
+<a aria-label="abrir gestao de pecas" class="timeline-stop clickable-card" href="subtelas/operacao/gestao-de-pecas.html">
+<span class="timeline-marker">3</span>
+<div class="timeline-stop__content">
+<header><div><h3>gestao de pecas</h3><p>separacao, compra e reserva</p></div><strong>R$ 63,9K</strong></header>
+<div class="timeline-meta"><span>42 OS paradas</span><span>tempo medio 5h05</span></div>
+</div>
+</a>
+<a aria-label="abrir reparo" class="timeline-stop timeline-stop--alert clickable-card" href="subtelas/operacao/reparo.html">
+<span class="timeline-marker">4</span>
+<div class="timeline-stop__content">
+<header><div><h3>reparo</h3><p>execucao tecnica e retrabalho</p></div><strong>R$ 89,7K</strong></header>
+<div class="timeline-meta"><span>68 OS paradas</span><span>maior gargalo</span></div>
+</div>
+</a>
+<a aria-label="abrir qualidade" class="timeline-stop clickable-card" href="subtelas/operacao/qualidade.html">
+<span class="timeline-marker">5</span>
+<div class="timeline-stop__content">
+<header><div><h3>qualidade</h3><p>teste final e liberacao</p></div><strong>R$ 22,3K</strong></header>
+<div class="timeline-meta"><span>29 OS paradas</span><span>tempo medio 1h55</span></div>
+</div>
+</a>
+</div>
+<aside aria-label="Leitura rapida da operacao" class="operation-side panel-card">
+<p class="section-kicker"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span> leitura rapida</p>
+<article class="mini-insight">
+<strong>reparo em atencao</strong>
+<span>etapa critica com R$ 89,7K parados.</span>
+</article>
+<article class="mini-insight">
+<strong>pecas + reparo concentram custo</strong>
+<span>64,9% do custo parado na operacao.</span>
+</article>
+<a class="full-button" href="subtelas/operacao/reparo.html">abrir plano de acao ›</a>
+</aside>
+</section>
+</section>
+<section aria-label="Home Skyline" class="page-view is-active" data-view="home">
+<section aria-label="Planos de acao por categoria" class="home-ai-box panel-card">
+<span class="home-ai-box__spark home-ai-box__spark--top"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span>
+<span class="home-ai-box__spark home-ai-box__spark--bottom"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span>
+<div aria-label="Resumo geral da empresa" class="home-ai-box__intro">
+<article class="home-ai-box__status home-ai-box__status--full">
+<span>leitura geral</span>
+<strong>estavel com pontos de atencao</strong>
+<small>atualizado pela central skyline</small>
+</article>
+</div>
+<div aria-label="Planos de acao por categoria" class="action-plan-grid">
+<a aria-label="abrir plano comercial" class="action-plan-card clickable-card" href="subtelas/home/plano-comercial.html">
+<div class="action-plan-card__icon"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/carrinho.svg"/></div>
+<div>
+<span class="action-plan-card__tag">comercial</span>
+<h3>priorizar canais com margem real</h3>
+<p>Revisar precos, separar venda por canal e destacar produtos com maior giro e menor impacto no caixa.</p>
+</div>
+</a>
+<a aria-label="abrir plano operacional" class="action-plan-card clickable-card" href="subtelas/home/plano-operacional.html">
+<div class="action-plan-card__icon"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/fabrica.svg"/></div>
+<div>
+<span class="action-plan-card__tag">operacao</span>
+<h3>remover gargalos da linha</h3>
+<p>Monitorar etapas paradas, tempo medio por status e custo preso em reparo, triagem e qualidade.</p>
+</div>
+</a>
+<a aria-label="abrir plano financeiro" class="action-plan-card clickable-card" href="subtelas/home/plano-financeiro.html">
+<div class="action-plan-card__icon"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/money.svg"/></div>
+<div>
+<span class="action-plan-card__tag">financeiro</span>
+<h3>blindar caixa e margem</h3>
+<p>Acompanhar contas criticas, previsao de entrada, custo parado e diferenca entre faturamento e lucro.</p>
+</div>
+</a>
+<a aria-label="abrir plano gerencial" class="action-plan-card clickable-card" href="subtelas/home/plano-gerencial.html">
+<div class="action-plan-card__icon"><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/tarket.svg"/></div>
+<div>
+<span class="action-plan-card__tag">gerencial</span>
+<h3>fechar rotina de decisao</h3>
+<p>Centralizar metas, alertas, indicadores por area e proximas acoes para acompanhamento diario.</p>
+</div>
+</a>
+</div>
+</section>
+</section>
+<section aria-labelledby="financeiro-title" class="page-view" data-view="financeiro" hidden="">
+<section aria-label="Painel financeiro" class="finance-screen">
+<section class="finance-hero panel-card">
+<div class="finance-hero__copy">
+<p class="section-kicker"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/money.svg"/></span> financeiro</p>
+<h2 id="financeiro-title">resultado financeiro</h2>
+<p>acompanhe lucro, dre, contas e analises criticas sem perder a visao de caixa.</p>
+</div>
+<a aria-label="abrir lucro" class="finance-profit-card clickable-card" href="subtelas/financeiro/lucro.html">
+<span class="finance-profit-card__toggle"><b>feito</b><span>projecao</span></span>
+<strong>R$ 303K</strong>
+<small>lucro realizado com alternancia visual entre feito e projecao.</small>
+</a>
+</section>
+<section aria-label="Cards financeiros" class="finance-grid">
+<a aria-label="abrir dre" class="finance-card finance-card--dre clickable-card" href="subtelas/financeiro/dre.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--purple"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>dre</strong><small>receita, custo, despesa e resultado operacional</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+<a aria-label="abrir contas a pagar" class="finance-card clickable-card" href="subtelas/financeiro/contas-a-pagar.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--red"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>contas a pagar</strong><small>vencimentos, fornecedores e saida de caixa</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+<a aria-label="abrir contas a receber" class="finance-card clickable-card" href="subtelas/financeiro/contas-a-receber.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--green"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>contas a receber</strong><small>entradas previstas, atrasos e inadimplencia</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+<a aria-label="abrir precificacao financeira" class="finance-card clickable-card" href="subtelas/financeiro/precificacao.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--orange"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>precificacao</strong><small>preco, margem minima, desconto e lucro real</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+<a aria-label="abrir prejuizos" class="finance-card clickable-card" href="subtelas/financeiro/prejuizos.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--red"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>prejuizos</strong><small>perdas, devolucoes, quebras e retrabalho</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+<a aria-label="abrir contabil" class="finance-card clickable-card" href="subtelas/financeiro/contabil.html">
+<span aria-hidden="true" class="finance-card__icon finance-card__icon--blue"><img alt="" class="ui-icon" src="assets/icons/money.svg"/></span>
+<div><strong>contabil</strong><small>conciliacao, classificacao e fechamento mensal</small></div>
+<span aria-hidden="true" class="finance-card__arrow">›</span>
+</a>
+</section>
+</section>
+</section>
+<section aria-labelledby="gestao-title" class="page-view" data-view="gestao" hidden="">
+<section aria-label="Painel de gestao" class="management-screen">
+<h2 class="sr-only" id="gestao-title">gestao</h2>
+<div class="management-desktop-grid">
+<section aria-labelledby="management-projects-title" class="management-projects">
+<div class="management-section-title">
+<h3 id="management-projects-title">projetos</h3>
+<span>visao rapida por frente</span>
+</div>
+<div class="management-projects-card panel-card">
+<div aria-label="Projetos de gestao" class="management-project-grid">
+<a aria-label="abrir otimizacao" class="management-project-card management-project-card--purple clickable-card" href="subtelas/gestao/otimizacao.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<path d="M20 51c9-19 28-31 51-31 4 0 7 3 7 7 0 23-15 38-40 38H24c-5 0-7-6-4-14Z"></path>
+<circle cx="65" cy="26" r="7"></circle>
+<path d="M24 53l16-16m-5 20 16-16"></path>
+</svg>
+</div>
+<strong>otimizacao</strong>
+</a>
+<a aria-label="abrir precificacao" class="management-project-card management-project-card--green clickable-card" href="subtelas/gestao/precificacao.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<rect height="34" rx="12" width="56" x="20" y="24"></rect>
+<path d="M28 39h40M32 50h22"></path>
+<circle cx="68" cy="26" r="11"></circle>
+<path d="M68 20v12m-6-6h12"></path>
+</svg>
+</div>
+<strong>precificacao</strong>
+</a>
+<a aria-label="abrir vagas" class="management-project-card management-project-card--blue clickable-card" href="subtelas/gestao/vagas.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<rect height="38" rx="11" width="48" x="24" y="20"></rect>
+<circle cx="48" cy="35" r="8"></circle>
+<path d="M35 53c3-8 22-8 26 0M34 17h28"></path>
+</svg>
+</div>
+<strong>vagas</strong>
+</a>
+<a aria-label="abrir melhorias" class="management-project-card management-project-card--orange clickable-card" href="subtelas/gestao/melhorias.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<path d="M24 54h48"></path>
+<rect height="28" rx="6" width="16" x="27" y="22"></rect>
+<rect height="35" rx="6" width="16" x="50" y="15"></rect>
+<path d="M66 20l9-9m0 0v13m0-13H62"></path>
+</svg>
+</div>
+<strong>melhorias</strong>
+</a>
+<a aria-label="abrir growth" class="management-project-card management-project-card--cyan clickable-card" href="subtelas/gestao/growth.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<path d="M21 54c16-28 35-30 54-8"></path>
+<path d="M25 47h12v12H25zM43 36h12v23H43zM61 26h12v33H61z"></path>
+<circle cx="72" cy="21" r="7"></circle>
+</svg>
+</div>
+<strong>growth</strong>
+</a>
+<a aria-label="abrir oportunidades" class="management-project-card management-project-card--yellow clickable-card" href="subtelas/gestao/oportunidades.html">
+<div aria-hidden="true" class="management-project-card__art">
+<svg role="img" viewbox="0 0 96 72">
+<circle cx="48" cy="35" r="20"></circle>
+<path d="M48 20v30m-12-14h24"></path>
+<path d="M29 56c8 7 30 7 38 0"></path>
+</svg>
+</div>
+<strong>oportunidades</strong>
+</a>
+</div>
+</div>
+</section>
+<aside aria-label="Leitura rapida gerencial desktop" class="management-quick-read panel-card">
+<p class="section-kicker"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span> leitura rapida</p>
+<article class="mini-insight management-quick-read__item">
+<strong>frentes criticas</strong>
+<span>priorize precificacao e estoque antes de abrir novos projetos.</span>
+</article>
+<article class="mini-insight management-quick-read__item">
+<strong>6 projetos ativos</strong>
+<span>otimizacao, precificacao, vagas, melhorias, growth e oportunidades.</span>
+</article>
+<article class="mini-insight management-quick-read__item">
+<strong>relatorios no radar</strong>
+<span>cliente, estoque, produto e preco viram a base da rotina gerencial.</span>
+</article>
+<a class="full-button" href="subtelas/gestao/otimizacao.html">abrir plano gerencial ›</a>
+</aside>
+</div>
+<section aria-labelledby="management-reports-title" class="management-reports panel-card">
+<div class="management-section-title management-section-title--reports">
+<h3 id="management-reports-title">relatorios gerenciais</h3>
+<span>cards de acesso rapido</span>
+</div>
+<div aria-label="Lista de relatorios gerenciais" class="management-report-list">
+<a aria-label="abrir gerencia de cliente" class="management-report-card clickable-card" href="subtelas/gestao/gerencia-de-cliente.html">
+<span aria-hidden="true" class="management-report-card__icon management-report-card__icon--cliente">
+<svg viewbox="0 0 24 24"><path d="M7 19c.8-3.4 9.2-3.4 10 0"></path><circle cx="12" cy="8" r="4"></circle></svg>
+</span>
+<div class="management-report-card__copy">
+<strong>gerencia de cliente</strong>
+<small>carteira, recorrencia e risco comercial</small>
+</div>
+<div class="management-report-card__meta">
+<strong>abrir</strong>
+<span>›</span>
+</div>
+</a>
+<a aria-label="abrir gerencia de estoque" class="management-report-card clickable-card" href="subtelas/gestao/gerencia-de-estoque.html">
+<span aria-hidden="true" class="management-report-card__icon management-report-card__icon--estoque">
+<svg viewbox="0 0 24 24"><path d="M4 8l8-4 8 4-8 4-8-4Z"></path><path d="M4 8v8l8 4 8-4V8"></path><path d="M12 12v8"></path></svg>
+</span>
+<div class="management-report-card__copy">
+<strong>gerencia de estoque</strong>
+<small>saldo, ruptura, excesso e cobertura</small>
+</div>
+<div class="management-report-card__meta">
+<strong>abrir</strong>
+<span>›</span>
+</div>
+</a>
+<a aria-label="abrir gerencia de produto" class="management-report-card clickable-card" href="subtelas/gestao/gerencia-de-produto.html">
+<span aria-hidden="true" class="management-report-card__icon management-report-card__icon--produto">
+<svg viewbox="0 0 24 24"><rect height="16" rx="4" width="14" x="5" y="4"></rect><path d="M8 9h8M8 13h5"></path></svg>
+</span>
+<div class="management-report-card__copy">
+<strong>gerencia de produto</strong>
+<small>familia, cadastro, margem e performance</small>
+</div>
+<div class="management-report-card__meta">
+<strong>abrir</strong>
+<span>›</span>
+</div>
+</a>
+<a aria-label="abrir gerencia de preco" class="management-report-card clickable-card" href="subtelas/gestao/gerencia-de-preco.html">
+<span aria-hidden="true" class="management-report-card__icon management-report-card__icon--preco">
+<svg viewbox="0 0 24 24"><path d="M5 7h9l5 5-7 7-7-7V7Z"></path><circle cx="10" cy="11" r="1.5"></circle></svg>
+</span>
+<div class="management-report-card__copy">
+<strong>gerencia de preco</strong>
+<small>precificacao, desconto e margem real</small>
+</div>
+<div class="management-report-card__meta">
+<strong>abrir</strong>
+<span>›</span>
+</div>
+</a>
+</div>
+</section>
+</section>
+</section>
+</section>
+</main>
+<div class="mobile-search" hidden="" id="mobileSearch">
+<div aria-hidden="true" class="mobile-search__backdrop" data-mobile-search-close=""></div>
+<aside aria-hidden="true" aria-labelledby="mobileSearchTitle" aria-modal="true" class="mobile-search__sheet panel-card" id="mobileSearchSheet" role="dialog" tabindex="-1">
+<h2 class="sr-only" id="mobileSearchTitle">Busca global</h2>
+<label aria-label="Buscar no app" class="mobile-search__field" for="mobileSearchInput">
+<span aria-hidden="true" class="search__icon"><img alt="" class="ui-icon" src="assets/icons/busca.svg"/></span>
+<input aria-controls="mobileSearchResults" autocomplete="off" enterkeyhint="search" id="mobileSearchInput" placeholder="buscar no app..." type="search"/>
+</label>
+<div aria-label="Resultados da busca mobile" class="mobile-search__results" id="mobileSearchResults" role="listbox"></div>
+</aside>
+</div>
+<div class="mobile-insight" hidden="" id="mobileInsight">
+<button aria-controls="mobileInsightSheet" aria-expanded="false" aria-label="Abrir leitura rapida" class="mobile-insight__fab" id="mobileInsightFab" type="button">
+<span aria-hidden="true" id="mobileInsightFabIcon"><img alt="" class="ui-icon mobile-insight__fab-icon" src="assets/icons/sparks.svg"/></span>
+</button>
+<div aria-hidden="true" class="mobile-insight__backdrop" data-mobile-insight-close=""></div>
+<aside aria-hidden="true" aria-labelledby="mobileInsightTitle" aria-modal="true" class="mobile-insight__sheet panel-card" id="mobileInsightSheet" role="dialog" tabindex="-1">
+<button aria-label="Fechar leitura rapida" class="mobile-insight__close" data-mobile-insight-close="" type="button"><img alt="" aria-hidden="true" class="close-icon ui-icon" src="assets/icons/excluir.svg"/></button>
+<p class="section-kicker" id="mobileInsightKicker"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/sparks.svg"/></span> leitura rapida</p>
+<div id="mobileInsightContent">
+<article class="mini-insight">
+<strong id="mobileInsightTitle">loja lidera o dia</strong>
+<span>maior crescimento e maior ticket medio.</span>
+</article>
+<article class="mini-insight">
+<strong>marketplaces em atencao</strong>
+<span>queda pede revisao de preco e margem.</span>
+</article>
+</div>
+<a class="full-button" href="subtelas/comercial/loja.html" id="mobileInsightAction">abrir diagnostico ›</a>
+</aside>
+</div>
+<nav aria-label="Menu inferior" class="bottom-nav">
+<button aria-label="Ir para comercial" data-section="comercial" title="comercial" type="button"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/carrinho.svg"/></span></button>
+<button aria-label="Ir para operacao" data-section="operacao" title="operacao" type="button"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/fabrica.svg"/></span></button>
+<button aria-label="Ir para home" class="is-active" data-section="home" title="home" type="button"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/home.svg"/></span></button>
+<button aria-label="Ir para financeiro" data-section="financeiro" title="financeiro" type="button"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/money.svg"/></span></button>
+<button aria-label="Ir para gestao" data-section="gestao" title="gestao" type="button"><span><img alt="" aria-hidden="true" class="ui-icon" src="assets/icons/tarket.svg"/></span></button>
+</nav>
+</div>
+<button class="install-app" hidden="" id="installApp" type="button">Instalar app</button>
+<script defer="" src="app.js"></script>
 </body>
 </html>

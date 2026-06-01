@@ -44,8 +44,15 @@ function renderIcon(src, className = 'ui-icon') {
 
 const STORAGE_KEYS = {
   splashSeen: 'skyline:splash-seen-v1',
-  activeSection: 'skyline:active-section-v3'
+  activeSection: 'skyline:active-section-v4'
 };
+
+function getSectionFromLocation() {
+  const rawHash = window.location.hash.replace('#', '').trim();
+  const querySection = new URLSearchParams(window.location.search).get('section');
+  const section = querySection || rawHash;
+  return PAGE_META[section] ? section : 'home';
+}
 
 
 const MOBILE_INSIGHT_META = {
@@ -93,8 +100,8 @@ const MOBILE_INSIGHT_META = {
     titleId: 'mobileInsightTitle',
     action: 'abrir plano gerencial ›',
     items: [
-      { title: 'decisao diaria centralizada', text: 'concentrar metas, alertas e indicadores principais por area.' },
-      { title: 'plano de acao visivel', text: 'manter prioridades claras para comercial, operacao e financeiro.' }
+      { title: 'projetos no topo', text: 'acompanhar otimizacao, precificacao, vagas, melhorias, growth e oportunidades.' },
+      { title: 'relatorios gerenciais', text: 'abrir cliente, estoque, produto e preco sem procurar no menu.' }
     ]
   }
 };
@@ -121,13 +128,13 @@ const PAGE_META = {
   financeiro: {
     kicker: 'financas',
     icon: ICONS.financeiro,
-    title: 'Modulo financeiro em construcao',
-    documentTitle: 'Skyline Mobile | Financas'
+    title: 'Resultado financeiro',
+    documentTitle: 'Skyline Mobile | Financeiro'
   },
   gestao: {
     kicker: 'gestao',
     icon: ICONS.gestao,
-    title: 'Modulo de gestao em construcao',
+    title: 'Projetos e relatorios gerenciais',
     documentTitle: 'Skyline Mobile | Gestao'
   }
 };
@@ -190,19 +197,20 @@ function showApp() {
 }
 
 async function boot() {
+  const params = new URLSearchParams(window.location.search);
   const hasSeenSplash = localStorage.getItem(STORAGE_KEYS.splashSeen) === 'true';
+  const shouldSkipSplash = hasSeenSplash || params.get('skipSplash') === '1';
 
-  if (hasSeenSplash) {
-    // Mantem o preload em segundo plano, como antes, mas segura o splash por pelo menos 1 segundo.
+  if (shouldSkipSplash) {
+    // Depois do primeiro carregamento, a volta das subtelas nao deve mostrar splash de novo.
+    localStorage.setItem(STORAGE_KEYS.splashSeen, 'true');
     preloadInitialEndpoints();
-    await wait(MIN_SPLASH_TIME_MS);
     showApp();
     return;
   }
 
   try {
-    // Primeiro acesso continua aguardando os dados iniciais e o tempo visual original do splash.
-    // Como FIRST_LOAD_SPLASH_TIME_MS e maior que MIN_SPLASH_TIME_MS, o minimo de 1 segundo ja fica garantido.
+    // Splash fica reservado apenas para o primeiro acesso real do app.
     await Promise.all([preloadInitialEndpoints(), wait(FIRST_LOAD_SPLASH_TIME_MS)]);
   } finally {
     localStorage.setItem(STORAGE_KEYS.splashSeen, 'true');
@@ -216,7 +224,7 @@ const SECTION_SEARCH_WORDS = {
   comercial: 'comercial venda vendas canal canais loja whatsapp wpp site ecommerce marketplace marketplaces margem preco precos ticket crescimento queda diagnostico bu bus',
   operacao: 'operacao operacional producao linha recebimento triagem gestao pecas reparo qualidade gargalo gargalos custo parado paradas os tempo medio retrabalho execucao',
   financeiro: 'financeiro financas financa caixa margem lucro faturamento custo contas conciliacao fluxo entrada previsao saldo valor valores',
-  gestao: 'gestao gerencial gerencial metas meta okr okrs indicador indicadores alerta alertas decisao rotina acompanhamento diario controle visibilidade plano acao'
+  gestao: 'gestao gerencial gerenciais projetos projeto otimizacao precificacao vagas melhorias growth oportunidades relatorio relatorios cliente estoque produto preco metas meta okr okrs indicador indicadores alerta alertas decisao rotina acompanhamento diario controle visibilidade plano acao'
 };
 
 function normalizeSearchText(value) {
@@ -275,7 +283,7 @@ function buildSearchIndex() {
       text: normalizeSearchText(`${sectionWords} ${meta.kicker} ${meta.title} ${pageText}`)
     });
 
-    const cards = view.querySelectorAll('.action-plan-card, .market-row, .timeline-stop, .coming-soon, .mini-insight, .home-ai-box__status');
+    const cards = view.querySelectorAll('.action-plan-card, .market-row, .timeline-stop, .coming-soon, .mini-insight, .home-ai-box__status, .management-project-card, .management-report-card, .management-quick-read, .finance-profit-card, .finance-card');
     cards.forEach((card) => {
       const title = getNodeTitle(card, meta.kicker);
       const description = getNodeDescription(card, title);
@@ -283,11 +291,14 @@ function buildSearchIndex() {
 
       if (!raw || raw.length < 4) return;
 
+      const href = card.getAttribute('href') || card.dataset.cardHref || '';
+
       index.push({
         section,
         type: 'item',
         title,
         description,
+        href,
         text: normalizeSearchText(raw)
       });
     });
@@ -359,7 +370,7 @@ function renderSearchResults(container, query, options = {}) {
   container.innerHTML = results.map((item) => {
     const description = cleanSearchText(item.description).slice(0, 132);
     return `
-      <button class="search-result" type="button" role="option" data-search-section="${escapeHtml(item.section)}">
+      <button class="search-result" type="button" role="option" data-search-section="${escapeHtml(item.section)}" data-search-href="${escapeHtml(item.href || '')}">
         <span class="search-result__area">${escapeHtml(PAGE_META[item.section]?.kicker || item.section)}</span>
         <strong>${escapeHtml(item.title)}</strong>
         <small>${escapeHtml(description)}${description.length >= 132 ? '...' : ''}</small>
@@ -424,11 +435,16 @@ function syncSearchInputs(value, source) {
   if (source !== 'mobile' && mobileSearchInput) mobileSearchInput.value = value;
 }
 
-function selectSearchResult(section) {
+function selectSearchResult(section, href = '') {
+  if (href) {
+    window.location.href = href;
+    return;
+  }
+
   if (!PAGE_META[section]) return;
 
   closeSearchPanels();
-  setActiveSection(section, { animate: true });
+  setActiveSection(section, { animate: true, updateHash: true });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -436,7 +452,7 @@ function handleSearchResultClick(event) {
   const resultButton = event.target.closest('[data-search-section]');
   if (!resultButton) return;
 
-  selectSearchResult(resultButton.dataset.searchSection);
+  selectSearchResult(resultButton.dataset.searchSection, resultButton.dataset.searchHref || '');
 }
 
 function handleSearchEnter(sourceInput) {
@@ -444,7 +460,7 @@ function handleSearchEnter(sourceInput) {
   const firstResult = getSearchResults(query)[0];
   if (!firstResult) return;
 
-  selectSearchResult(firstResult.section);
+  selectSearchResult(firstResult.section, firstResult.href || '');
 }
 
 function initGlobalSearch() {
@@ -646,6 +662,10 @@ function setActiveSection(section, options = {}) {
   if (pageTitle) pageTitle.textContent = meta.title;
   document.title = meta.documentTitle;
 
+  if (options.updateHash === true && window.location.hash.replace('#', '') !== safeSection) {
+    history.replaceState(null, '', `#${safeSection}`);
+  }
+
   if (!nextView || currentView === nextView) {
     activeSection = safeSection;
     syncMobileInsight(safeSection);
@@ -699,16 +719,19 @@ function setActiveSection(section, options = {}) {
 }
 
 function initNavigation() {
-  // Sempre inicia o app na Home ao abrir/recarregar, tanto no desktop quanto no mobile.
-  // A navegacao continua normal depois do boot, mas nao usamos mais a ultima categoria salva.
+  // Inicia pela secao indicada no hash quando a subtela volta para o app.
   localStorage.removeItem(STORAGE_KEYS.activeSection);
-  setActiveSection('home', { animate: false });
+  setActiveSection(getSectionFromLocation(), { animate: false });
 
   navButtons.forEach((button) => {
     button.addEventListener('click', () => {
       closeSearchPanels();
-      setActiveSection(button.dataset.section, { animate: true });
+      setActiveSection(button.dataset.section, { animate: true, updateHash: true });
     });
+  });
+
+  window.addEventListener('hashchange', () => {
+    setActiveSection(getSectionFromLocation(), { animate: true });
   });
 
   window.addEventListener('resize', () => {
@@ -774,18 +797,26 @@ function initRefreshButton() {
   refreshButton.addEventListener('click', async () => {
     if (refreshButton.disabled) return;
 
+    const spinDurationMs = 1000;
+    const spinMinimumTime = new Promise((resolve) => window.setTimeout(resolve, spinDurationMs));
+
     refreshButton.disabled = true;
     refreshButton.setAttribute('aria-busy', 'true');
-    refreshButton.classList.add('is-updating');
+
+    // Reinicia a animacao mesmo se o usuario clicar novamente depois de uma atualizacao anterior.
+    refreshButton.classList.remove('is-spinning');
+    void refreshButton.offsetWidth;
+    refreshButton.classList.add('is-updating', 'is-spinning');
+
     app.classList.add('is-refresh-transitioning');
     triggerScreenGlow({ includeDesktop: true, reason: 'refresh' });
 
     try {
-      await preloadInitialEndpoints();
+      await Promise.all([preloadInitialEndpoints(), spinMinimumTime]);
     } finally {
       refreshButton.disabled = false;
       refreshButton.removeAttribute('aria-busy');
-      refreshButton.classList.remove('is-updating');
+      refreshButton.classList.remove('is-updating', 'is-spinning');
       window.setTimeout(() => app.classList.remove('is-refresh-transitioning'), 260);
     }
   });
